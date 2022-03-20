@@ -12,7 +12,7 @@ const loadBooks = function () {
 
 const saveBooks = function (books) {
     const data = JSON.stringify(books)
-    fs.writeFileSync('notes.json', data)
+    fs.writeFileSync('books.csv', data)
 }
 
 const searchBooks = function (topic) {
@@ -30,7 +30,7 @@ const searchBooks = function (topic) {
 const infoBook = function (item_number) {
     const books = loadBooks()
     const foundBook = books.find((book) => (book.item_number == item_number))
-    const propsToRemove = ['topic', 'item_number', 'title']
+    const propsToRemove = ['topic', 'item_number']
 
     try {
         propsToRemove.forEach((propName) => {
@@ -43,9 +43,27 @@ const infoBook = function (item_number) {
 
 }
 
+const updateBook = (item_number, updates) => {
+    books = loadBooks()
+    books.forEach(book => {
+        if (book.item_number == item_number) {
+            if (updates.itemsInStock) {
+                book.itemsInStock += itemsInStock
+            }
+            if (updates.cost) {
+                book.cost = updates.cost
+            }
+        }
+    });
+    saveBooks(books)
+
+}
+
 module.exports = {
-    saveBooks,
+    infoBook,
     loadBooks,
+    saveBooks,
     searchBooks,
-    infoBook
+    updateBook
+
 }
