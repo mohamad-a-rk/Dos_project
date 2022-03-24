@@ -48,9 +48,13 @@ const updateBook = (item_number, updates) => {
     books.forEach(book => {
         if (book.item_number == item_number) {
             if (updates.itemsInStock) {
-                book.itemsInStock += itemsInStock
+                if (book.itemsInStock == 0 && updates.itemsInStock < 0)
+                    throw new Error('No items in stock')
+                book.itemsInStock += updates.itemsInStock
             }
             if (updates.cost) {
+                if (updates.const < 0)
+                    throw new Error('Invalid value')
                 book.cost = updates.cost
             }
         }
