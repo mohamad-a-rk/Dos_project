@@ -13,7 +13,16 @@ app.get('/search/:topic', (req, res) => {
 
 app.get('/info/:item_number', (req, res) => {
     var item_number = req.params.item_number
-    res.send(books.infoBook(item_number))
+    const book = books.infoBook(item_number)
+    if (!book.title) {
+        console.log('====================================');
+        console.log();
+        console.log('====================================');
+        res.status(404).send()
+    }
+    else {
+        res.send(book)
+    }
 })
 
 app.put('/update/:item_number', (req, res) => {
@@ -33,6 +42,3 @@ app.put('/update/:item_number', (req, res) => {
 app.listen(port, () => {
     console.log('Server has started at port ', port)
 })
-
-console.log(books.searchBooks('Distributed systems'));
-console.log(books.infoBook(3))
