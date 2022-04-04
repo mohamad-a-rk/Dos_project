@@ -4,8 +4,8 @@ const request = require('request')
 const orders = require('./orders')
 
 var app = express()
-const port = 4000
-var catalogIP = 'http://localhost:3000/'
+const port = 3000
+var catalogIP = 'http://catalog:3000/'
 app.use(express.json())
 
 app.post('/purchase/:item_number', (req, res) => {

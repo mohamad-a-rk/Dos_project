@@ -15,9 +15,6 @@ app.get('/info/:item_number', (req, res) => {
     var item_number = req.params.item_number
     const book = books.infoBook(item_number)
     if (!book.title) {
-        console.log('====================================');
-        console.log();
-        console.log('====================================');
         res.status(404).send()
     }
     else {
