@@ -8,14 +8,38 @@ services:
       - 8081:3000
     expose:
       - 3000
+    volumes:
+      - catalog:/usr/src/app
+  catalog2:
+    build:
+      context: ./Catalog2
+    command: [ "npm", "run", "start" ]
+    ports:
+      - 8082:3001
+    expose:
+      - 3001
+    volumes:
+      - catalog2:/usr/src/app
   order:
     build:
       context: ./Order
     command: [ "npm", "run", "start" ]
     ports:
-      - 8082:3000
+      - 8089:3000
     expose:
       - 3000
+    volumes:
+      - order1:/usr/src/app
+  order2:
+    build:
+      context: ./Order2
+    command: [ "npm", "run", "start" ]
+    ports:
+      - 8085:3001
+    expose:
+      - 3001
+    volumes:
+      - order2:/usr/src/app
   frontend:
     build:
       context: ./Frontend
@@ -24,3 +48,18 @@ services:
       - 8080:3000
     expose:
       - 3000
+    volumes:
+      - frontend:/usr/src/app
+volumes:
+  catalog:
+    external: true
+  catalog2:
+    external: true
+  order1:
+    external: true
+  order2:
+    external: true
+  frontend:
+    external: true
+
+ 

@@ -4,17 +4,19 @@ const request = require('request')
 const orders = require('./orders')
 
 var app = express()
-const port = 3000
+const port = 3001
 var catalogIP = 'http://catalog:3000/'
 var catalog2IP = 'http://catalog2:3001/'
-var order2IP = 'http://order2:3001/'
+var orderIP = 'http://order:3000/'
 
 app.use(express.json())
+
 
 app.post('/addOrder/:item_number', (req, res) => {
     var item_number = req.params.item_number
     res.send({ orderID: orders.addOrder(item_number) })
 });
+
 
 app.post('/purchase/:item_number', (req, res) => {
     var item_number = req.params.item_number
@@ -44,7 +46,7 @@ app.post('/purchase/:item_number', (req, res) => {
 
                         if (UpdateResponse.statusCode == 200) {
                             const orderRequest = {
-                                uri: order2IP + 'addOrder/' + item_number,
+                                uri: orderIP + 'addOrder/' + item_number,
                                 body: '',
                                 method: 'POST',
                                 headers: {
