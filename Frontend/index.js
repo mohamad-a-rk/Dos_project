@@ -1,6 +1,7 @@
 const express = require('express')
 const request = require('request')
 const { SequentialRoundRobin } = require('round-robin-js');
+const URLParser = require('url')
 var app = express()
 
 const NodeCache = require("node-cache");
@@ -19,11 +20,10 @@ const orderServers = new SequentialRoundRobin([orderIP, order2IP]);
 app.use(express.json())
 
 const verifyCache = (req, res, next) => {
-    const type = require('url').parse(req.url).pathname.substring(1);
-    console.log(type)
-
+    const type = URLParser.parse(req.url).pathname.substring(1);
+    console.log(type);
     try {
-        if (type === `search/${req.params.topic}` && searchCache.has(req.params.topic)) {
+        if (type === `search/${req.params.topic}`.replace(/ /g,"%20") && searchCache.has(req.params.topic)) {
             console.log('A topic found')
             return res.status(200).json(JSON.parse(searchCache.get(req.params.topic)));
         }
@@ -52,6 +52,7 @@ app.post('/purchase/:item_number', (req, res) => {
         }
         infoCache.del(JSON.parse(response.body).infoResponse.item_number)
         searchCache.del(JSON.parse(response.body).infoResponse.topic)
+        // console.log('Order server: ' + orderServers.currentTurn)
         res.status(response.statusCode).send(response.body)
     })
 })
@@ -71,7 +72,9 @@ app.all('/search/:topic', verifyCache, (req, res) => {
             console.log(error);
         }
         const topic = req.params.topic;
-        searchCache.set(topic, JSON.parse(response).body);
+        searchCache.set(topic, response.body);
+        console.log(topic, ' -- ', searchCache.get(topic))
+        // console.log('Catalog server[search]: ' + catalogServers.currentTurn))
         res.status(response.statusCode).send(response.body)
     })
 })
@@ -93,9 +96,10 @@ app.all('/info/:item_number', verifyCache, (req, res) => {
         const id = req.params.item_number;
 
         infoCache.set(id, response.body);
-        console.log('1', response.body)
+        // console.log('1', response.body)
         // console.log('11', JSON.parse(response).body)
         console.log(infoCache.get(id))
+        // console.log('Catalog server[info]: ' + catalogServers.currentTurn())
         res.status(response.statusCode).send(response.body)
     })
 })
