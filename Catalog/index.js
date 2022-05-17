@@ -12,6 +12,8 @@ app.get('/search/:topic', (req, res) => {
 })
 
 app.get('/info/:item_number', (req, res) => {
+    console.log('cat1')
+
     var item_number = req.params.item_number
     const book = books.infoBook(item_number)
     if (!book.title) {

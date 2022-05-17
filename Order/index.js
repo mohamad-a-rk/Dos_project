@@ -17,6 +17,7 @@ app.post('/addOrder/:item_number', (req, res) => {
 });
 
 app.post('/purchase/:item_number', (req, res) => {
+    console.log('ord1')
     var item_number = req.params.item_number
     var clientServerOptions = {
         uri: catalogIP + 'info/' + item_number,
